@@ -1,0 +1,49 @@
+dnl Installation of `Debian 12' "UEFI" on internal &SSD&, using debootstrap
+s_(
+h_(Requirements)
+ul_(
+li_(Computer with `64 bit' processor (Intel or AMD) and installed either i_(Debian 10), i_(Debian 11), or
+i_(Debian 12) in b_(UEFI) mode either on the internal drive, on external drive, or
+on a_(../y2024/debootstrap.html USB LINK!!! stick).)
+li_(For better results, 'Legacy mode' should be disabled in "UEFI settings" (so-called BIOS settings).)
+)
+p_(spw_(Warning:) all data on the `SSD` will be destroyed during the installation!)
+p_(In this guide the installation is performed on b_(1 TiB) internal SSD. paren_(Change the size of your
+partitions accordingly to your SSD's maximum capacity).)
+)
+s_(
+h_(Preparation)
+p_(Install 'debootstrap'.)
+c_(sudo apt br_(update)
+sudo apt upgrade -y br_()
+sudo apt install debootstrap)
+p_(Find the device name.)
+p_(Run 'lsblk' to list all avaliable devices.)
+c_(lsblk br_()
+pre_(NAME        MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
+sda           8:0    0 953.9G  0 disk 
+nvme0n1     259:0    0 931.5G  0 disk 
+bdc_()nvme0n1p1 259:1    0   560M  0 part /boot/efi
+bdc_()nvme0n1p2 259:2    0     4G  0 part [SWAP]
+bdc_()nvme0n1p3 259:3    0   120G  0 part /
+bdce_()nvme0n1p4 259:4    0   807G  0 part /home)
+)
+p_(My SSD is i_(brand new) and does -->laq_(not $1 this)<-- have $1 $2 $* $@ any PARTITIONS & DATA on it. In my case, SSD's name is b_(/dev/sda).)
+p_(spw_(Warning:) if you select the wrong && DEVICE && during the installation, all the data on that device will be nbhyp_(permanently)destroyed.)
+p_(a_(https://ivanb.neocities.org/?blog=test&format=html&username=admin Site paren_(link) lparen_()and test!))
+p_(blt_() This is laq_(quoted text with nesq_(nested quotes) the text) Unquoted crub_(11) text ndsh_() b_(standard quotes).)
+p_(blt_() This is altlaq_(quoted text with altnesq_(nested quotes) the text) Unquoted crub_(200) text ndsh_() b_(alternative quotes).)
+p_(Currency ceur_()150 and 150 crub_() ndsh_() Currency rg_() tm_() text lparen_()rparen_(), rparen_(1) text, rparen_(2)z, rparen_(3)d.)
+p_(sct_() pmrk_() The code is angb_(deprecated) in future versions. 12 degr_()C ndsh_() degr_(12)C degr_(a) 12degr_())
+p_(Angular arc nbsp_(degr_(21))nbsp_(mnt_(18))scnd_(15) with minutes and seconds.)
+h_(Ordered list)
+ol_(
+li_(list item)li_(list item )li_(lrarr_()llarr_(item))li_(Numero sign rarr_()larr_(numerosign_()95))li_(Sound recording copyright cpysr_() symbol)li_(Last Item)
+)
+p_(shyp_(ABCDEFGHIJKLMNOPQRSTUVWXYZ)shyp_(abcdefghijklmnopqrstuvwxyz)012345678987654321000000000000)
+p_(The link ab_(set_url_(https://www.google.com/ https://www.bing.com/) search engine) dynamically changed depending on whether a
+macro is defined at command line before processing of macros.)
+p_(Usage:br_()
+>| blog.html m4 --gnu -- br_(blog.m4)
+>| blog.html m4 --gnu -D shyp_(rmt_s)rv_ -- blog.m4)
+)
