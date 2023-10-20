@@ -1,0 +1,96 @@
+dnl Using fstrim on USB connected SSD
+s_(
+h_(Preface)
+p_(In Debian GNU/Linux TRIM is disabled by default on USB connected SSDs.)
+p_(On internal SSDs TRIM operation is scheduled once per week,
+on USB connected SSDs it can be run manually.)
+)
+s_(
+h_(Preparation)
+p_(Login as user 'root'.)
+c_(su -l)
+p_(Install 'sg3-utils'.)
+c_(apt br_(update)
+apt upgrade -y br_()
+apt install sg3-utils)
+p_(Connect the external SSD to USB port.)
+)
+s_(
+h_(Checking TRIM support)
+p_(Run 'lsblk --discard' to list all avaliable devices.)
+c_(lsblk --discard br_()
+pre_(NAME        DISC-ALN DISC-GRAN DISC-MAX DISC-ZERO
+sda                0      512B       2G         0
+bdc_()sda1             0      512B       2G         0
+bdc_()sda2             0      512B       2G         0
+bdc_()sda3             0      512B       2G         0
+bdce_()sda4             0      512B       2G         0
+sdb                0        0B       0B         0
+bdc_()sdb1             0        0B       0B         0
+bdc_()sdb2             0        0B       0B         0
+bdc_()sdb3             0        0B       0B         0
+bdc_()sdb4             0        0B       0B         0
+bdce_()sdb5             0        0B       0B         0)
+)
+p_(DISC-GRAN b_(0) and DISC-MAX b_(0) indicate that TRIM is disabled.)
+p_(Check if USB connected SSD supports TRIM.)
+c_(sg_vpd -a /dev/sdb | grep 'Unmap')
+p_(TRIM is supported if the following line is present:)
+c_(Unmap command supported (LBPU): 1)
+p_(Check the path of 'provisioning_mode' file.)
+c_(ls /sys/block/sdb/device/scsi_disk/*/provisioning_mode)
+p_(In my case, 'ls' returns:)
+c_(/sys/block/sdb/device/scsi_disk/6:0:0:0/provisioning_mode)
+p_(Check SSD's provisioning mode.)
+c_(cat '/sys/block/sdb/device/scsi_disk/6:0:0:0/provisioning_mode')
+p_('cat' returns:)
+c_(full)
+)
+s_(
+h_(Enabling TRIM support until device is disconnected or system is rebooted)
+p_(Change SSD's provisioning mode.)
+c_(>| '/sys/block/sdb/device/scsi_disk/6:0:0:0/provisioning_mode' printf 'unmap\n')
+c_(cat '/sys/block/sdb/device/scsi_disk/6:0:0:0/provisioning_mode')
+p_('cat' returns:)
+c_(unmap)
+p_(Now 'lsblk --discard' should show non-zero values for DISC-GRAN and DISC-MAX.)
+c_(lsblk --discard br_()
+pre_(NAME        DISC-ALN DISC-GRAN DISC-MAX DISC-ZERO
+sda                0      512B       2G         0
+bdc_()sda1             0      512B       2G         0
+bdc_()sda2             0      512B       2G         0
+bdc_()sda3             0      512B       2G         0
+bdce_()sda4             0      512B       2G         0
+sdb                0      512B       4G         0
+bdc_()sdb1             0      512B       4G         0
+bdc_()sdb2             0      512B       4G         0
+bdc_()sdb3             0      512B       4G         0
+bdc_()sdb4             0      512B       4G         0
+bdce_()sdb5             0      512B       4G         0)
+)
+p_(Get information about filesystems.)
+c_(blkid | grep 'sdb' | sort br_()br_()
+/dev/sdb1: TYPE="ext4" br_()
+/dev/sdb2: TYPE="ext4" br_()
+/dev/sdb3: TYPE="swap" br_()
+/dev/sdb5: TYPE="ntfs")
+)
+s_(
+h_(Perform the TRIM operation)
+p_(Mount first partition, trim it and unmount it.)
+c_(mount -o discard /dev/sdb1 /mnt/ br_()
+fstrim -v /mnt br_()
+umount /mnt)
+p_(Mount second partition, trim it and unmount it.)
+c_(mount -o discard /dev/sdb2 /mnt/ br_()
+fstrim -v /mnt br_()
+umount /mnt)
+p_(Swap can be trimmed by 'swapon --discard=once' command.)
+p_(Perform a single-time discard operation for the whole swap area at i_(swapon).)
+c_(swapon --discard=once /dev/sdb3 br_()
+swapoff /dev/sdb3)
+p_(Mount last partition, trim it and unmount it.)
+c_(ntfs-3g -o discard /dev/sdb5 /mnt/ br_()
+fstrim -v /mnt br_()
+umount /mnt)
+)
