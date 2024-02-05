@@ -1,0 +1,21 @@
+
+
+# vim:ft=sh
+
+# Using 'ed'
+
+<<\EOF >/dev/null 2>&1 ed -s input.txt
+1,$s/&/\&#38;/g
+1,$s/,/\&#44;/g
+1,$s/'/\&#39;/g
+1,$s/"/\&#34;/g
+1,$s/`/\&#96;/g
+w ./output.txt
+q
+EOF
+
+# Using 'sed'
+
+>output.txt sed 's/&/\&#38;/g;s/,/\&#44;/g;s/'\''/\&#39;/g;s/"/\&#34;/g;s/`/\&#96;/g' input.txt
+
+
